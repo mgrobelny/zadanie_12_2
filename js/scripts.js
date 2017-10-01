@@ -35,7 +35,7 @@ $(document).ready(function() {
 	getQuote();
 	$('.trigger').click(function() { // podpięcie elemntu o klasie .trigger nasłuchiwanie na zdarzenie kliknięcia, po którym ma się wykonać funkcja generująca cytat
 		getQuote();
-	})
+	});
 });
 
 
