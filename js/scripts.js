@@ -1,37 +1,41 @@
 // scripts.js
+	
+var tweetLink = "https://twitter.com/intent/tweet?text="; // standardowy link do wysyłania tweetów na Twittera (treść tweeta po "=")
+var prefix = "https://cors-anywhere.herokuapp.com/"; // prefiks pomagający w rozwiązaniu problemu z CORS
+var quoteUrl = "https://quotesondesign.com/wp-json/posts?filter[orderby]=rand&filter[posts_per_page]=1"; // link do API Quotes and Design, pobierający z basy losowe cytaty
 
-    var tweetLink = "https://twitter.com/intent/tweet?text=";
-    //var quoteUrl = "http://api.forismatic.com/api/1.0/?method=getQuote&key=867576&format=jsonp&lang=en&jsonp=?";
-    var quoteUrl = "https://quotesondesign.com/wp-json/posts?filter[orderby]=rand&filter[posts_per_page]=1";
-    
-    function getQuote() {
-        $.getJSON(quoteUrl, createTweet);
-    }
-    
-    function createTweet(input) {
-        if (!input.quoteAuthor.length) {
-            input.quoteAuthor = 'Unknown author';
-        }
-        
-        var tweetText = 'Quote of the day - ' + input.quoteText + 'Author: ' + input.quoteAuthor;
-        
-        if (tweetText.length > 140) {
-            getQuote();
-        } else {
-            var tweet = tweetLink + encodeURIComponent(tweetText);
-            $('.quote').text(input.quoteText);
-            $('.author').text('Author: ' + input.quoteAuthor);
-            $('.tweet').attr('href', tweet);
-        }
+function getQuote() {
+    $.getJSON(prefix + quoteUrl, createTweet); // uproszczona wersja metody $.ajax(); quoteUrl - parametr będący adresem url do pobrania cytatu (link do API); createTweet - funkcja, która zostanie wykonana po pomyślnym wykonaniu zadania,
+    $.ajaxSetup({ cache: false }); // żeby zapytania się nie cache'owały
+}
+
+function createTweet(input) { // funkcja ma tworzyć linki z tweetami i podpinać je pod przycisk do tweetowania
+    var data = input[0];
+
+    var quoteText = $(data.content).text().trim(); // .text() wyciąga zawartość tekstową z elementu, trim() ucina niepotrzebne spacje na początku i końcu stringa
+    var quoteAuthor = data.title;
+
+    if (!quoteAuthor.length) { // sprawdzenie, czy autor jest pustym stringiem. Jeśli tak - pojawia się napis "author unknown"
+        quoteAuthor = "unknown author";
     }
 
-$(document).ready(function() {   
-    getQuote();
+    var tweetText = "Quote of the day - " + quoteText + " author: " + quoteAuthor; // wygenerorwanie treści tweeta
     
-    $('.trigger').click(function() {
-        getQuote();
-    });
-    
+    if (tweetText.length > 140) { // sprawdzenie, czy tweet nie jest za długi dla Twittera
+    	getQuote(); // jeżeli jest za długi, tweet jest generowany ponownie
+    } else {
+    	var tweet = tweetLink + encodeURIComponent(tweetText); // encodeURIComponent <- This function encodes special characters. In addition, it encodes the following characters: , / ? : @ & = + $ #
+    	$('.quote').text(quoteText); // element wyświetlający treść cytatu
+    	$('.author').text("author: " + quoteAuthor); // element pokazdujący autora cytatu
+    	$('.tweet').attr('href', tweet); // wybór klasy .tweet i modyfikacja zawartości atrybutu href na URL tweeta, który trzymany jest w zmiennej tweet
+    } 
+}
+
+$(document).ready(function() {
+	getQuote();
+	$('.trigger').click(function() { // podpięcie elemntu o klasie .trigger nasłuchiwanie na zdarzenie kliknięcia, po którym ma się wykonać funkcja generująca cytat
+		getQuote();
+	})
 });
 
 

@@ -1,0 +1,51 @@
+@import url('https://fonts.googleapis.com/css?family=Amaranth');
+
+body {
+	background-color: lightblue;
+	color: white;
+	text-align: center;
+	position: relative;
+	font-family: 'Amaranth', sans-serif;
+}
+h1 {
+	border: 5px solid white;
+	padding: 20px;
+	margin: 50px 50px;
+}
+h2, h3 {
+
+}
+.trigger {
+	border: 5px solid white;
+	background-color: transparent;
+	color: white;
+	font-size: 20px;
+	padding: 20px;
+	font-family: 'Amaranth', sans-serif;
+	cursor: pointer;
+}
+.trigger:hover, a.tweet:hover {
+	background-color: white;
+	color: lightblue;
+}
+a.tweet {
+	font-size: 20px;
+	border: 5px solid white;
+	padding: 20px;
+	width: 100px;
+	text-align: center;
+	right: 200px;
+}
+a {
+	color: white;
+	text-decoration: none;
+}
+.randomButton {
+	margin-top: 50px;
+	height: 100px;
+}
+.randomTwitter {
+	height: 50px;
+	margin-top: 20px;
+	font-family: 'Amaranth', sans-serif;
+}
